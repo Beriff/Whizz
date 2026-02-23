@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11506.43 insiders
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asliipa", "Asliipa.csproj", "{3D597F27-5D81-AA15-6C62-846F45A67778}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D597F27-5D81-AA15-6C62-846F45A67778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D597F27-5D81-AA15-6C62-846F45A67778}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D597F27-5D81-AA15-6C62-846F45A67778}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D597F27-5D81-AA15-6C62-846F45A67778}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EAF10AA3-1DA8-493F-B01C-CCFF0509B035}
+	EndGlobalSection
+EndGlobal
