@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Whizz
 {
-    public class Chunk
+    public class Chunk : IByteSerializable
     {
         public const int ChunkTileSize = 16;
         public readonly static Vector2 ChunkTileDimensions = new(ChunkTileSize, ChunkTileSize);
@@ -70,6 +71,45 @@ namespace Whizz
             return this;
         }
         #endif
+
+        public byte[] ByteSerialize()
+        {
+            List<byte> bytes = [];
+            for (int x = 0; x < ChunkTileSize; x++)
+                for (int y = 0; y < ChunkTileSize; y++)
+                    for (int z = 0; z < ChunkTileSize; z++)
+                        bytes.AddRange(Grid[x, y, z].ByteSerialize());
+            return [.. bytes];
+        }
+
+        public void ByteDeserialize(byte[] bytes)
+        {
+            int totalTiles = ChunkTileSize * ChunkTileSize * ChunkTileSize;
+            int expectedLength = totalTiles * Tile.SerializationWidth;
+
+            if (bytes.Length != expectedLength)
+                Game.StorageLoggerAgent.Log($"Chunk load failure: {expectedLength}/{bytes.Length} byte mismatch", LogLevel.Error);
+
+            int offset = 0;
+            for (int x = 0; x < ChunkTileSize; x++)
+            {
+                for (int y = 0; y < ChunkTileSize; y++)
+                {
+                    for (int z = 0; z < ChunkTileSize; z++)
+                    {
+                        byte[] tileData = new byte[Tile.SerializationWidth];
+                        Buffer.BlockCopy(bytes, offset, tileData, 0, Tile.SerializationWidth);
+
+                        Tile t = new();
+                        t.ByteDeserialize(tileData);
+                        Grid[x, y, z] = t;
+
+                        offset += Tile.SerializationWidth;
+                    }
+                }
+            }
+        }
+
     }
     public class World
     {

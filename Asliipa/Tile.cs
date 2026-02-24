@@ -11,12 +11,26 @@ namespace Whizz
     /// A tile is a basic component of the world, that does not interact with it by itself,
     /// but rather is controlled by a controller class (tile is a "dumb" data).
     /// </summary>
-    public struct Tile
+    public struct Tile : IByteSerializable
     {
         public const int TileSize = 16;
         public readonly static Vector2 TileDimensions = new(TileSize, TileSize);
 
         public Material Material;
+
+        public const int SerializationWidth = 2;
+
+        public byte[] ByteSerialize()
+        {
+            // the only two bytes (for now) are the material id
+            return [..BitConverter.GetBytes(Material.Id)];
+        }
+
+        public void ByteDeserialize(byte[] bytes)
+        {
+            ushort materialId = BitConverter.ToUInt16(bytes);
+            Material = Material.Registry.Get(materialId);
+        }
 
         public void RenderAt(nint renderer, Vector2 screenCoord)
         {

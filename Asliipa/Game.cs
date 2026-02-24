@@ -6,6 +6,7 @@ namespace Whizz
     public class Game
     {
         public static LoggerAgent VisualLoggerAgent;
+        public static LoggerAgent StorageLoggerAgent;
 
         private nint MainRenderer;
         private nint MainWindow;
@@ -19,6 +20,7 @@ namespace Whizz
             MainLogger = new() { LogFilter = [LogLevel.Trace] };
             MainLoggerAgent = MainLogger.GetAgent("Main");
             VisualLoggerAgent = MainLogger.GetAgent("Visual");
+            StorageLoggerAgent = MainLogger.GetAgent("Storage");
 
             result = SDL.SDL_CreateWindowAndRenderer(
                 (int)windowSize.X,
@@ -41,6 +43,7 @@ namespace Whizz
             Material grass = new("grass", Vector2.Zero);
             Tile t = new() { Material = grass };
             Chunk c = new Chunk().DebugFill(t);
+            c.ByteDeserialize(c.ByteSerialize());
 
             bool quit = false;
             SDL.SDL_Event e;
