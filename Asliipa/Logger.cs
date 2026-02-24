@@ -42,7 +42,7 @@ namespace Whizz
     }
 
     /// <summary>
-    /// Primary logging interface, which reports log events to every <see cref="Logger"/>
+    /// Primary logging interface, which reports log events to every <see cref="Logger"/> that the agent is bound to.
     /// </summary>
     public class LoggerAgent
     {
