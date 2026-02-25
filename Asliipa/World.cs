@@ -95,6 +95,7 @@ namespace Whizz
             return this;
         }
 
+        public static Chunk GenerateNewChunk(Noise noise, Vector3 coord) => new Chunk().GenerateChunk(noise, coord);
 
         public void Serialize(Stream stream)
         {

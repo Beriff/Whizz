@@ -30,7 +30,7 @@ namespace Whizz
             for (int x = 0; x < RegionSize; x++)
                 for (int y = 0; y < RegionSize; y++)
                     for (int z = 0; z < RegionSize; z++)
-                        reference[x, y, z] = Chunk.GenerateNewChunk(new(world.Seed), new(x, y));
+                        reference[x, y, z] = Chunk.GenerateNewChunk(new(world.Seed), new(x, y, z));
         }
     }
 }
