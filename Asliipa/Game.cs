@@ -43,7 +43,11 @@ namespace Whizz
             Material grass = new("grass", Vector2.Zero);
             Tile t = new() { Material = grass };
             Chunk c = new Chunk().DebugFill(t);
-            c.ByteDeserialize(c.ByteSerialize());
+
+            var stream = new MemoryStream();
+            c.Serialize(stream);
+            stream.Position = 0;
+            c.Deserialize(stream);
 
             bool quit = false;
             SDL.SDL_Event e;

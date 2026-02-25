@@ -6,7 +6,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Whizz
 {
-    public class Chunk : IByteSerializable
+    public class Chunk : IStreamSerializable
     {
         public const int ChunkTileSize = 16;
         public readonly static Vector2 ChunkTileDimensions = new(ChunkTileSize, ChunkTileSize);
@@ -72,39 +72,25 @@ namespace Whizz
         }
         #endif
 
-        public byte[] ByteSerialize()
+        public void Serialize(Stream stream)
         {
-            List<byte> bytes = [];
             for (int x = 0; x < ChunkTileSize; x++)
                 for (int y = 0; y < ChunkTileSize; y++)
                     for (int z = 0; z < ChunkTileSize; z++)
-                        bytes.AddRange(Grid[x, y, z].ByteSerialize());
-            return [.. bytes];
+                        Grid[x, y, z].Serialize(stream);
         }
 
-        public void ByteDeserialize(byte[] bytes)
+        public void Deserialize(Stream stream)
         {
-            int totalTiles = ChunkTileSize * ChunkTileSize * ChunkTileSize;
-            int expectedLength = totalTiles * Tile.SerializationWidth;
-
-            if (bytes.Length != expectedLength)
-                Game.StorageLoggerAgent.Log($"Chunk load failure: {expectedLength}/{bytes.Length} byte mismatch", LogLevel.Error);
-
-            int offset = 0;
             for (int x = 0; x < ChunkTileSize; x++)
             {
                 for (int y = 0; y < ChunkTileSize; y++)
                 {
                     for (int z = 0; z < ChunkTileSize; z++)
                     {
-                        byte[] tileData = new byte[Tile.SerializationWidth];
-                        Buffer.BlockCopy(bytes, offset, tileData, 0, Tile.SerializationWidth);
-
                         Tile t = new();
-                        t.ByteDeserialize(tileData);
+                        t.Deserialize(stream);
                         Grid[x, y, z] = t;
-
-                        offset += Tile.SerializationWidth;
                     }
                 }
             }
