@@ -25,7 +25,7 @@ namespace Whizz
             result = SDL.SDL_CreateWindowAndRenderer(
                 (int)windowSize.X,
                 (int)windowSize.Y,
-                SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN,
+                SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN | SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE,
                 out MainWindow, out MainRenderer);
 
             if (result == 0)
@@ -42,7 +42,9 @@ namespace Whizz
 
             Material grass = new("grass", Vector2.Zero);
             Tile t = new() { Material = grass };
-            Chunk c = new Chunk().DebugFill(t);
+            // Chunk c = new Chunk().DebugFill(t);
+            Noise noise = new Noise(seed: 13667);
+            Chunk c = new Chunk().GenerateChunk(noise, new(1, 1));
 
             var stream = new MemoryStream();
             c.Serialize(stream);
@@ -63,7 +65,7 @@ namespace Whizz
 
                 SDL.SDL_RenderPresent(MainRenderer);
             }
-                
+
 
             SDL.SDL_DestroyWindow(MainWindow);
             SDL.SDL_Quit();
