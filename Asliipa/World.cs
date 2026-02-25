@@ -71,7 +71,7 @@ namespace Whizz
         }
 #endif
 
-        public Chunk GenerateChunk(Noise noise, Vector2 coord)
+        public Chunk GenerateChunk(Noise noise, Vector3 coord)
         {
             const float frequency = 0.1f;
 
@@ -80,7 +80,7 @@ namespace Whizz
                     for (int z = 0; z < ChunkTileSize; z++)
                     {
                         float n = noise.Fractal(
-                            new Vector2((coord.X + x) * frequency, (coord.Y + y) * frequency),
+                            new Vector3((coord.X + x) * frequency, (coord.Y + y) * frequency, (coord.Z + z) * frequency),
                             octaves: 6,
                             lacunarity: 2.0f,
                             persistence: 0.5f
@@ -95,7 +95,6 @@ namespace Whizz
             return this;
         }
 
-        public static Chunk GenerateNewChunk(Noise noise, Vector2 coord) => new Chunk().GenerateChunk(noise, coord);
 
         public void Serialize(Stream stream)
         {
