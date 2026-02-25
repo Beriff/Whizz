@@ -44,7 +44,7 @@ namespace Whizz
             Tile t = new() { Material = grass };
             // Chunk c = new Chunk().DebugFill(t);
             Noise noise = new Noise(seed: 13667);
-            Chunk c = new Chunk().GenerateChunk(noise);
+            Chunk c = new Chunk().GenerateChunk(noise, new(1, 1));
 
             var stream = new MemoryStream();
             c.Serialize(stream);

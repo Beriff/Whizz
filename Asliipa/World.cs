@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Whizz
 {
@@ -72,7 +71,7 @@ namespace Whizz
         }
 #endif
 
-        public Chunk GenerateChunk(Noise noise)
+        public Chunk GenerateChunk(Noise noise, Vector2 coord)
         {
             const float frequency = 0.1f;
 
@@ -81,13 +80,13 @@ namespace Whizz
                     for (int z = 0; z < ChunkTileSize; z++)
                     {
                         float n = noise.Fractal(
-                            new Vector2(x * frequency, y * frequency),
+                            new Vector2((coord.X + x) * frequency, (coord.Y + y) * frequency),
                             octaves: 6,
                             lacunarity: 2.0f,
                             persistence: 0.5f
                         );
 
-                        int ix = (int)((n * 0.5 + 0.5) * 6);
+                        int ix = (int)((n * 0.5 + 0.5) * 4);
                         Material mat = new($"mat{ix}", new(ix, 0));
                         Tile t = new() { Material = mat };
                         Grid[x, y, z] = t;
@@ -96,6 +95,7 @@ namespace Whizz
             return this;
         }
 
+        public static Chunk GenerateNewChunk(Noise noise, Vector2 coord) => new Chunk().GenerateChunk(noise, coord);
 
         public void Serialize(Stream stream)
         {
@@ -125,17 +125,18 @@ namespace Whizz
     public class World
     {
         public Vector2 Camera;
+        public int Seed { get; protected set; }
+        public string Name { get; set; } = "DefaultWorld";
 
         // Side of a cube that is loaded around the player
         protected static int ChunkLoadRadius = 3;
-        protected Random RNG;
 
         // Uses chunk coordinates
         protected Dictionary<Vector2, Chunk> LoadedChunks;
 
         public World(int seed)
         {
-            RNG = new Random(seed);
+            Seed = seed;
         }
 
         public void LoadChunksAtPoint(Vector2 worldCoordinates)
