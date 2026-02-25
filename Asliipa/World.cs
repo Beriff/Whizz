@@ -8,7 +8,7 @@ namespace Whizz
 {
     public class Chunk : IStreamSerializable
     {
-        public const int ChunkTileSize = 16;
+        public const int ChunkTileSize = 32;
         public readonly static Vector2 ChunkTileDimensions = new(ChunkTileSize, ChunkTileSize);
 
         public const int ChunkPixelSize = ChunkTileSize * Tile.TileSize;
@@ -56,11 +56,11 @@ namespace Whizz
                         localZ);
                 }
             }
-                
-                    
+
+
         }
 
-        #if DEBUG
+#if DEBUG
         public Chunk DebugFill(Tile t)
         {
             for (int x = 0; x < ChunkTileSize; x++)
@@ -70,7 +70,32 @@ namespace Whizz
 
             return this;
         }
-        #endif
+#endif
+
+        public Chunk GenerateChunk(Noise noise)
+        {
+            const float frequency = 0.1f;
+
+            for (int x = 0; x < ChunkTileSize; x++)
+                for (int y = 0; y < ChunkTileSize; y++)
+                    for (int z = 0; z < ChunkTileSize; z++)
+                    {
+                        float n = noise.Fractal(
+                            new Vector2(x * frequency, y * frequency),
+                            octaves: 6,
+                            lacunarity: 2.0f,
+                            persistence: 0.5f
+                        );
+
+                        int ix = (int)((n * 0.5 + 0.5) * 6);
+                        Material mat = new($"mat{ix}", new(ix, 0));
+                        Tile t = new() { Material = mat };
+                        Grid[x, y, z] = t;
+                    }
+
+            return this;
+        }
+
 
         public void Serialize(Stream stream)
         {
