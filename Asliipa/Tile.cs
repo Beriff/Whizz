@@ -11,7 +11,7 @@ namespace Whizz
     /// A tile is a basic component of the world, that does not interact with it by itself,
     /// but rather is controlled by a controller class (tile is a "dumb" data).
     /// </summary>
-    public struct Tile : IStreamSerializable
+    public record struct Tile : IStreamSerializable
     {
         public const int TileSize = 16;
         public readonly static Vector2 TileDimensions = new(TileSize, TileSize);
@@ -29,6 +29,12 @@ namespace Whizz
         public void Deserialize(Stream stream)
         {
             using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
+            ushort materialId = reader.ReadUInt16();
+            Material = Material.Registry.Get(materialId);
+        }
+
+        public void Deserialize(BinaryReader reader)
+        {
             ushort materialId = reader.ReadUInt16();
             Material = Material.Registry.Get(materialId);
         }

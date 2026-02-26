@@ -40,16 +40,15 @@ namespace Whizz
         {
             MainLoggerAgent.Log("Application Started", LogLevel.Info);
 
+
             Material grass = new("grass", Vector2.Zero);
             Tile t = new() { Material = grass };
-            // Chunk c = new Chunk().DebugFill(t);
-            Noise noise = new Noise(seed: 13667);
-            Chunk c = new Chunk().GenerateChunk(noise, new(0, 0, 0));
 
-            var stream = new MemoryStream();
-            c.Serialize(stream);
-            stream.Position = 0;
-            c.Deserialize(stream);
+            World w = new World(13667);
+
+            var region = ChunkRegion.GenerateDefaultRegion();
+            region.SaveOrUpdate(w);
+            region = ChunkRegion.Load(w, Vector3.Zero);
 
             bool quit = false;
             SDL.SDL_Event e;
@@ -61,7 +60,7 @@ namespace Whizz
 
                 SDL.SDL_RenderClear(MainRenderer);
 
-                c.RenderChunkAt(MainRenderer, Vector2.Zero, 0);
+                region.Chunks[0, 0, 0].RenderChunkAt(MainRenderer, Vector2.Zero, 0);
 
                 SDL.SDL_RenderPresent(MainRenderer);
             }

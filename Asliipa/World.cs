@@ -105,7 +105,7 @@ namespace Whizz
                         Grid[x, y, z].Serialize(stream);
         }
 
-        public void Deserialize(Stream stream)
+        public void Deserialize(BinaryReader reader)
         {
             for (int x = 0; x < ChunkTileSize; x++)
             {
@@ -114,13 +114,23 @@ namespace Whizz
                     for (int z = 0; z < ChunkTileSize; z++)
                     {
                         Tile t = new();
-                        t.Deserialize(stream);
+                        t.Deserialize(reader);
                         Grid[x, y, z] = t;
                     }
                 }
             }
         }
 
+        public Tile this[int x, int y, int z]
+        {
+            get => Grid[x, y, z];
+            set => Grid[x, y, z] = value;
+        }
+        public Tile this[Vector3 pos]
+        {
+            get => Grid[(int)pos.X, (int)pos.Y, (int)pos.Z];
+            set => Grid[(int)pos.X, (int)pos.Y, (int)pos.Z] = value;
+        }
     }
     public class World
     {
