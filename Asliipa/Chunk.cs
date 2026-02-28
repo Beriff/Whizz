@@ -79,9 +79,10 @@ namespace Whizz
             Noise2D noise = new(w.GenSettings.Seed);
             Vector3 tileOffset = coord * Chunk.ChunkTileSize;
             // the surface is centered at Z = 16 (middle of the Z=0 chunk), instead of Z = 0 (top of Z=0 chunk)
-            float heightmapOffset = Chunk.ChunkTileSize / 2f; 
+            float heightmapOffset = Chunk.ChunkTileSize / 2f;
 
-            for (int x = 0; x < ChunkTileSize; x++)
+            Parallel.For(0, ChunkTileSize, x =>
+            {
                 for (int y = 0; y < ChunkTileSize; y++)
                 {
                     float height = noise.Fractal(new Vector2(x, y) * frequency, 6, 2f, .5f) * w.GenSettings.HeightScale + heightmapOffset;
@@ -94,13 +95,12 @@ namespace Whizz
                         {
                             c[x, y, z] = new() { MaterialId = 1 };
                         }
-                            
+
                         else
                             c[x, y, z] = new() { MaterialId = 1 };
                     }
                 }
-                    
-
+            });
 
             return c;
         }

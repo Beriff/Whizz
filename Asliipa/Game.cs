@@ -17,7 +17,7 @@ namespace Whizz
         public Game(Vector2 windowSize)
         {
             int result;
-            MainLogger = new() { LogFilter = [LogLevel.Trace] };
+            MainLogger = new() { LogFilter = [LogLevel.Trace], FilterType = FilterType.After };
             MainLoggerAgent = MainLogger.GetAgent("Main");
             VisualLoggerAgent = MainLogger.GetAgent("Visual");
             StorageLoggerAgent = MainLogger.GetAgent("Storage");
@@ -42,11 +42,9 @@ namespace Whizz
 
             World w = new World(WorldGenSettings.Default);
 
-            /*var region = ChunkRegion.GenerateDefaultRegion();
+            var region = ChunkRegion.GenerateDefaultRegion();
             region.SaveOrUpdate(w);
-            region = ChunkRegion.Load(w, Vector3.Zero);*/
-
-            Chunk c = Chunk.GenerateNewChunk(w, Vector3.Zero);
+            region = ChunkRegion.Load(w, Vector3.Zero);
 
             bool quit = false;
             SDL.SDL_Event e;
@@ -55,9 +53,7 @@ namespace Whizz
                 while (SDL.SDL_PollEvent(out e) != 0)
                     if (e.type == SDL.SDL_EventType.SDL_QUIT)
                         quit = true;
-
-                c.RenderChunkAt(MainRenderer, Vector2.Zero, 0);
-                //region.Chunks[0, 0, 0].RenderChunkAt(MainRenderer, Vector2.Zero, 0);
+                region.Chunks[0, 0, 0].RenderChunkAt(MainRenderer, Vector2.Zero, 0);
 
                 SDL.SDL_RenderPresent(MainRenderer);
             }
