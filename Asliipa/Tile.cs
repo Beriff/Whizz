@@ -16,35 +16,29 @@ namespace Whizz
         public const int TileSize = 16;
         public readonly static Vector2 TileDimensions = new(TileSize, TileSize);
 
-        public Material Material;
+        public ushort MaterialId;
+        public readonly Material GetMaterial() => Material.Registry.Get(MaterialId);
 
         public const int SerializationWidth = 2;
 
         public readonly void Serialize(Stream stream)
         {
             using var writer = new BinaryWriter(stream, Encoding.UTF8, leaveOpen: true);
-            writer.Write(Material.Id);
-        }
-
-        public void Deserialize(Stream stream)
-        {
-            using var reader = new BinaryReader(stream, Encoding.UTF8, leaveOpen: true);
-            ushort materialId = reader.ReadUInt16();
-            Material = Material.Registry.Get(materialId);
+            writer.Write(MaterialId);
         }
 
         public void Deserialize(BinaryReader reader)
         {
             ushort materialId = reader.ReadUInt16();
-            Material = Material.Registry.Get(materialId);
+            MaterialId = materialId;
         }
 
         public void RenderAt(nint renderer, Vector2 screenCoord)
         {
             SDL.SDL_Rect sourceRect = new()
             {
-                x = (int)Material.AtlasTextureCoordinates.X,
-                y = (int)Material.AtlasTextureCoordinates.Y,
+                x = (int)GetMaterial().AtlasTextureCoordinates.X,
+                y = (int)GetMaterial().AtlasTextureCoordinates.Y,
                 w = TileSize,
                 h = TileSize
             };

@@ -29,5 +29,12 @@ namespace Whizz
             TextureModulation = modulation ?? Color.White;
             Id = Registry.Register(this);
         }
+
+        static Material()
+        {
+            new Material("Dirt", new Vector2(1, 0));
+            new Material("Stone", new Vector2(2, 0));
+            new Material("Air", new Vector2(0, 1));
+        }
     }
 }

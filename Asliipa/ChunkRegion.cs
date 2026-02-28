@@ -31,7 +31,7 @@ namespace Whizz
             for (int x = 0; x < RegionSize; x++)
                 for (int y = 0; y < RegionSize; y++)
                     for (int z = 0; z < RegionSize; z++)
-                        reference[x, y, z] = Chunk.GenerateNewChunk(new(world.Seed), new(x, y, z));
+                        reference[x, y, z] = Chunk.GenerateNewChunk(world, new(x, y, z));
 
             // compare against present chunks
             // and construct a map of tile differences
@@ -123,13 +123,12 @@ namespace Whizz
             }
 
             // generate fresh region
-            Noise n = new(world.Seed);
             for (int x = 0; x < RegionSize; x++)
                 for (int y = 0; y < RegionSize; y++)
                     for (int z = 0; z < RegionSize; z++)
                     {
                         var globalChunkOffset = new Vector3(x, y, z) + coordinates * RegionSize;
-                        chunks[x, y, z] = Chunk.GenerateNewChunk(n, globalChunkOffset);
+                        chunks[x, y, z] = Chunk.GenerateNewChunk(world, globalChunkOffset);
                     }
                         
 
@@ -148,12 +147,11 @@ namespace Whizz
         /// </summary>
         public static ChunkRegion GenerateDefaultRegion()
         {
-            Noise n = new(0);
             Chunk[,,] chunks = new Chunk[RegionSize, RegionSize, RegionSize];
             for (int x = 0; x < RegionSize; x++)
                 for (int y = 0; y < RegionSize; y++)
                     for (int z = 0; z < RegionSize; z++)
-                        chunks[x, y, z] = Chunk.GenerateNewChunk(n, new(x, y, z));
+                        chunks[x, y, z] = Chunk.GenerateNewChunk(new World(WorldGenSettings.Default), new(x, y, z));
                     
             return new(Vector3.Zero, chunks);
         }

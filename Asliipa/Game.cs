@@ -40,15 +40,13 @@ namespace Whizz
         {
             MainLoggerAgent.Log("Application Started", LogLevel.Info);
 
+            World w = new World(WorldGenSettings.Default);
 
-            Material grass = new("grass", Vector2.Zero);
-            Tile t = new() { Material = grass };
-
-            World w = new World(13667);
-
-            var region = ChunkRegion.GenerateDefaultRegion();
+            /*var region = ChunkRegion.GenerateDefaultRegion();
             region.SaveOrUpdate(w);
-            region = ChunkRegion.Load(w, Vector3.Zero);
+            region = ChunkRegion.Load(w, Vector3.Zero);*/
+
+            Chunk c = Chunk.GenerateNewChunk(w, Vector3.Zero);
 
             bool quit = false;
             SDL.SDL_Event e;
@@ -58,9 +56,8 @@ namespace Whizz
                     if (e.type == SDL.SDL_EventType.SDL_QUIT)
                         quit = true;
 
-                SDL.SDL_RenderClear(MainRenderer);
-
-                region.Chunks[0, 0, 0].RenderChunkAt(MainRenderer, Vector2.Zero, 0);
+                c.RenderChunkAt(MainRenderer, Vector2.Zero, 0);
+                //region.Chunks[0, 0, 0].RenderChunkAt(MainRenderer, Vector2.Zero, 0);
 
                 SDL.SDL_RenderPresent(MainRenderer);
             }
